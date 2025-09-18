@@ -33,8 +33,8 @@ while True:
     for ton in tonovi:
         print(ton, end="  ")
     print("\n")
-    
-    pocetni_ton = input("Unesi početni ton za akord (primjer: C, D#, G, ...): ").strip()
+
+    pocetni_ton = input("Unesi početni ton za akord (primjer: C, D#, G, ...): ").strip().upper()
     print()
 
     if pocetni_ton not in tonovi:
@@ -48,6 +48,7 @@ while True:
             tonovi[(indeks + 4) % 12],
             tonovi[(indeks + 7) % 12]
         ]
+        
         mol_akord = [
             tonovi[indeks],
             tonovi[(indeks + 3) % 12],
