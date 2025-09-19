@@ -19,6 +19,8 @@ h -> H, D, F#
 
 '''
 import os
+#    Definiranje tonova u oktavi
+#          'Ce, Cis, De, Dis, E, F, Fis, Ge, Gis, A, Ais, H'
 
 tonovi = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "H"]
 
