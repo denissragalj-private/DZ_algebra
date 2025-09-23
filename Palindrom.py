@@ -6,13 +6,13 @@
     - Ana voli Milovana
 
 # Unos od korisnika
-rijec = input("Unesi riječ: ")
+palindrom = input("Unesi riječ: ")
 
 # Pretvori u mala slova
-rijec = ...  # Dodaj .lower()
+palindrom = ...  # Dodaj .lower()
 
 # Obrni riječ
-obrnuto = rijec[ ... ]  # Koristi slice da okreneš
+obrnuto = palindrom[ ... ]  # Koristi slice da okreneš
 
 # Provjeri s IF
 if ... == ...:
@@ -38,19 +38,19 @@ print('='*70)
 # WHILE petlja za ponovno pokretanje (opcionalno)
 while True:
     # Unos od korisnika
-    rijec = input("Unesi riječ ili rečenicu (ili 'exit' za izlaz): ")
+    palindrom = input("Unesi riječ ili rečenicu (ili 'exit' za izlaz): ")
     
-    if rijec.lower() == 'exit':
+    if palindrom.lower() == 'exit':
         break
     
     # Pretvori u mala slova i makni razmake
-    rijec = rijec.lower().strip().replace(" ", "")
+    palindrom = palindrom.lower().strip().replace(" ", "")
     
     # Obrni riječ
-    obrnuto = rijec[::-1]  # Koristimo slice da okrenemo
+    obrnuto = palindrom[::-1]  # Koristimo slice da okrenemo
     
     # Provjeri s IF
-    if rijec == obrnuto:
+    if palindrom == obrnuto:
         print("Da, ovo je palindrom.")
     else:
         print("Ne, ovo nije palindrom.")
