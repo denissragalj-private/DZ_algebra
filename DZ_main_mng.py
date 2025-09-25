@@ -254,26 +254,31 @@ while True:
                     break
             #endregion
     elif menu_item == 3:
-    #region DISPLAY ALL EMPLOYEES
+         #region DISPLAY ALL EMPLOYEES
         print(f"|{'ID':<5}|", end='')
-        print(f"{'Ime':<20}|", end='') 
+        print(f"{'Ime':<20}|", end='')
         print(f"{'Prezime':<20}|", end='')
-        print(f"{'Vozilo':<30}|") # Dodan novi stupac
-        print('-'*80)
+        print(f"{'Vozilo':<30}|", end='')
+        # Dodan novi stupac: Korisnik sustava
+        print(f"{'Korisnik sustava':<20}|")
+        print('-'*100)
 
         for employee in company['employees']:
             assigned_vehicle = 'Nema dodijeljeno vozilo'
             for vehicle in company['vehicles']:
                 if vehicle['used_by'] == employee['first_name']:
                     assigned_vehicle = f"{vehicle['type']} ({vehicle['licence_plate']})"
-                    break # Prekidamo unutarnju petlju jer smo našli vozilo
+                    break
 
+            is_user_employee = employee['first_name'] in company['logins']
+            
             print(f"|{employee['id']:<5}|", end='')
             print(f"{employee['first_name']:<20}|", end='')
             print(f"{employee['last_name']:<20}|", end='')
-            print(f"{assigned_vehicle:<30}|")
-        
-        print('-'*80)
+            print(f"{assigned_vehicle:<30}|", end='')
+            print(f"{'Da' if is_user_employee else 'Ne':<20}|")
+
+        print('-'*100)
         print()
         input('Za nastavak pritisnite tipku ENTER')
         #endregion
@@ -482,5 +487,5 @@ while True:
 
 # Zavrsetak izvrsavanja programa
 print()
-print('Pozdrav!')
-print('Hvala što ste koristili naš sustav.')
+print('Pozdrav!\n')
+print('Hvala što ste koristili naš sustav.\n')
