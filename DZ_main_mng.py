@@ -1,5 +1,5 @@
 import os
-
+import getpass
 
 #region INIT
 
@@ -41,6 +41,11 @@ company = {
             'id': 1,
             'first_name': 'Pero',
             'last_name': 'Peric'
+        },
+        {
+            'id': 2,
+            'first_name': 'Ivo',
+            'last_name': 'Ivic'
         }
     ]
 }
@@ -57,8 +62,7 @@ def login_user():
     # DZ - simulirati prijavu korisnika u sustav HINT: nekako, negdje cuvati password svakog korisnika
     username = input('Upisite korisnicko ime: ')
     if username.strip() == '':
-        username = 'guest'
-        print('Prijavljeni ste kao guest korisnik') 
+       pass
     elif username.lower() == 'admin':
         print('Dobrodosli admin korisnice!')
         password = input('Upisite lozinku: ')
