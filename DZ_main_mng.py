@@ -5,6 +5,7 @@ import getpass
 GREEN = '\033[92m'
 BLUE = '\033[94m'
 YELLOW = '\033[93m'
+VIOLET = '\033[35m'
 RED = '\033[91m'
 BOLD = '\033[1m'
 UNDERLINE = '\033[4m'
@@ -140,7 +141,7 @@ while True:
     if is_employee:
         print(f'Prijavljeni ste kao {username}. Imate pune ovlasti u sustavu.')
     else:
-        print(f'Prijavljeni ste kao {username}. \n Niste zaposlenik firme {company["name"]}. \n Imate ogranicene ovlasti u sustavu.')
+        print(f'Prijavljeni ste kao {username}. \n\nNiste zaposlenik firme {company["name"]}. \nImate ogranicene ovlasti u sustavu.')
     print()
     # Prikaz punog imena korisnika - HINT: full_name prijavljenog korisnika
     # DZ
@@ -149,8 +150,9 @@ while True:
         if employee['first_name'] == username:
             full_name = f"{employee['first_name']} {employee['last_name']}"
             break
-        
-    print(f'Korisnik: {full_name}')
+    if full_name == '':
+        full_name = username + ' (Nije zaposlenik)'
+    print(f'Korisnik: {YELLOW} {full_name}{ENDC}')
     print()
     print(f'{BLUE}1. Ispis svih vozila{ENDC}')
     print(f'{GREEN}2. Unos novog vozila{ENDC}')
@@ -163,9 +165,9 @@ while True:
     print(f'{YELLOW}8. Brisanje djelatnika po ID-u{ENDC}') # HINT: obrisati djelatnika iz liste 'employees' prema unesenom ID-u
     print(f'{GREEN}9. Promjena korisnika vozila{ENDC}') # HINT: promijeniti vrijednost 'used_by' za odabrano vozilo
     print(f'{GREEN}10. Promjena lozinke korisnika{ENDC}') # HINT: promijeniti vrijednost 'password' za odabranog korisnika
-    print(f'{GREEN}11. Odjava korisnika{ENDC}') # HINT: odjaviti korisnika i vratiti se na početak programa (prijava korisnika)
+    print(f'{VIOLET}11. Odjava/zamjena korisnika{ENDC}') # HINT: odjaviti korisnika i vratiti se na početak programa (prijava korisnika)
     print(f'{YELLOW}12. Brisanje korisnika sustava{ENDC}') # HINT: obrisati korisnika iz rječnika 'logins'
-    print('0. Izlaz')
+    print(f'{VIOLET}0. Izlaz iz programa{ENDC}') # HINT: Izaći iz programa
     print()
 
 
@@ -200,17 +202,17 @@ while True:
         print()
         # Privremeno zaustavi izvrsavanje programa dok god korisnike ne pritisne tipku ENTER
         # Moze biti proivoljno vrijeme cekanja, dok time.spleep(sec=) zahtijeva fiksni broj sekundi
-        input('Za nastavak ptritsnite tipku ENTER')
+        input('Za nastavak pritisnite tipku ENTER')
         #endregion
     elif menu_item == 2:
-        #region ADD NEW VEHICLE
-        if username not in company['logins']:
+    #region ADD NEW VEHICLE
+        if not is_employee:
             print('Samo zaposlenici firme mogu unositi nova vozila u sustav!')
-            input('Za nastavak ptritsnite tipku ENTER')
+            input('Za nastavak pritisnite tipku ENTER')
             continue
         else:
             ocisti_terminal()
-           
+    
             while True:
                 #region OPIS
                 # vehicles = company['vehicles']
@@ -252,7 +254,7 @@ while True:
                     break
             #endregion
     elif menu_item == 3:
-        #region DISPLAY ALL EMPLOYEES
+    #region DISPLAY ALL EMPLOYEES
         print(f"|{'ID':<5}|", end='')
         print(f"{'Ime':<20}|", end='') 
         print(f"{'Prezime':<20}|", end='')
@@ -277,32 +279,35 @@ while True:
         #endregion
     elif menu_item == 4:
         #region ADD NEW EMPLOYEE
-        if username not in company['logins']:
-            print('Samo zaposlenici firme mogu unositi nova vozila u sustav!')
-            input('Za nastavak ptritsnite tipku ENTER')
+        if not is_employee:
+            print('Samo zaposlenici firme mogu unositi nove djelatnike u sustav!')
+            input('Za nastavak pritisnite tipku ENTER')
             continue
         else:
+            ocisti_terminal()
             while True:
+                # ... (sav ostali kod za unos djelatnika)
                 employee = {}
                 employee['id'] = company['employees'][-1]['id'] + 1
                 first_name = input('Upisite ime djelatnika: ')
                 last_name = input('Upisite prezime djelatnika: ')
                 employee['first_name'] = first_name
                 employee['last_name'] = last_name
-                # Unos lozinke
-                password = getpass.getpass('Upisite lozinku djelatnika: ') # koristiti getpass.getpass() za skriveni unos
-                employee['password'] = password
-
+                password = getpass.getpass('Upisite lozinku djelatnika: ')
                 company['employees'].append(employee)
-                # Dodavanje novog korisnika i njegove lozinke u rjecnik 'logins'
                 company['logins'][first_name] = password
-
                 next_entry = input('Novi unos? (Da/Ne): ')
                 if next_entry.lower() != 'da':
                     break
         #endregion
     elif menu_item == 5:
         #region ADD NEW USER
+        if not is_employee:
+            print('Samo zaposlenici firme mogu unositi nove korisnike u sustav!')
+            input('Za nastavak pritisnite tipku ENTER')
+            continue
+        else:
+            ocisti_terminal()
         while True:
             username = input('Upisite korisnicko ime: ')
             if username in company['logins']:
@@ -315,6 +320,9 @@ while True:
                 break
         #endregion
     elif menu_item == 6:
+        #region DISPLAY ALL USERS
+        print(f"Ispis svih korisnika sustava {company['name']}")
+        print('-'*54)
         print(f"|{'Korisnicko ime':<20}|", end='')
         print(f"{'Lozinka':<20}|", end='')
         print(f"{'Zaposlenik':<12}|")
@@ -422,18 +430,23 @@ while True:
         #endregion
     elif menu_item == 10:
         #region CHANGE USER PASSWORD
-        while True:
-            user_to_change = input('Upišite korisnicko ime kojem želite promijeniti lozinku: ')
-            if user_to_change in company['logins']:
-                new_password = getpass.getpass('Upišite novu lozinku: ')
-                company['logins'][user_to_change] = new_password
-                print(f'Lozinka za korisnika {user_to_change} je promijenjena.')
-            else:
-                print('Korisnik ne postoji u sustavu!')
-            
-            next_entry = input('Promjena lozinke drugog korisnika? (Da/Ne): ')
-            if next_entry.lower() != 'da':
-                break
+        if not is_employee:
+            print('Samo zaposlenici firme mogu mijenjati lozinke korisnika u sustavu!')
+            input('Za nastavak pritisnite tipku ENTER')
+            continue
+        else:
+            while True:
+                user_to_change = input('Upišite korisnicko ime kojem želite promijeniti lozinku: ')
+                if user_to_change in company['logins']:
+                    new_password = getpass.getpass('Upišite novu lozinku: ')
+                    company['logins'][user_to_change] = new_password
+                    print(f'Lozinka za korisnika {user_to_change} je promijenjena.')
+                else:
+                    print('Korisnik ne postoji u sustavu!')
+                
+                next_entry = input('Promjena lozinke drugog korisnika? (Da/Ne): ')
+                if next_entry.lower() != 'da':
+                    break
         #endregion
     elif menu_item == 11:
         #region LOGOUT USER
@@ -460,11 +473,12 @@ while True:
                 next_entry = input('Brisanje drugog korisnika? (Da/Ne): ')
                 if next_entry.lower() != 'da':
                     break
-        #endregion  
     else:
         print('Pogresan unos! Molimo izaberite jednu od ponudenih opcija.')
         input('Za nastavak pritisnite tipku ENTER') 
         continue
+        #endregion
+
 
 # Zavrsetak izvrsavanja programa
 print()
